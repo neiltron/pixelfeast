@@ -107,14 +107,13 @@ export default {
   },
 
   draw(ctx) {
-    const scale = dimensions.getScale(ctx);
-    const tileSize = Math.floor(dimensions.TILE_SIZE * scale);
+    const tileSize = Math.floor(dimensions.TILE_SIZE);
 
     let tile, y, x;
     for (y = 0; y < dimensions.GRID_HEIGHT; y += 1) {
       for (x = 0; x < dimensions.GRID_WIDTH; x += 1) {
         tile = tiles[y * dimensions.GRID_WIDTH + x];
-        ctx.drawImage(images[IMAGES[tile]], Math.floor(x * dimensions.TILE_SIZE * scale), Math.floor(y * dimensions.TILE_SIZE * scale), tileSize + 1, tileSize + 1);
+        ctx.drawImage(images[IMAGES[tile]], Math.floor(x * dimensions.TILE_SIZE), Math.floor(y * dimensions.TILE_SIZE), tileSize + 1, tileSize + 1);
       }
     }
   }

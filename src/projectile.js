@@ -1,5 +1,3 @@
-import * as dimensions from './dimensions';
-
 export default class Projectile {
   constructor(opts) {
     this.direction = opts.direction;
@@ -20,11 +18,9 @@ export default class Projectile {
   }
 
   draw(ctx) {
-    const scale = dimensions.getScale(ctx);
-
     ctx.save()
 
-    ctx.translate(this.position[0] * scale, this.position[1] * scale)
+    ctx.translate(this.position[0], this.position[1])
     ctx.rotate(this.direction);
 
     ctx.drawImage(this.image, 1, 0, this.width, this.height);

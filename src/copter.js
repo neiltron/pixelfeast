@@ -5,9 +5,6 @@ import Projectiles from './projectiles';
 import Projectile from './projectile';
 import { clamp } from './utils';
 
-const MOVEMENT_INCREMENT = 10;
-const ROTATION_INCREMENT = 2 * Math.PI / 20;
-
 class Copter {
   constructor() {
     this.width = dimensions.DRONE_SIZE;
@@ -18,6 +15,9 @@ class Copter {
 
     this.acceleratorX = 0;
     this.acceleratorY = 0;
+
+    this.leftDown = false;
+    this.rightDown = false;
 
     this.center = [dimensions.VIEWPORT_WIDTH / 2 - this.width / 2, dimensions.VIEWPORT_HEIGHT / 2 - this.height / 2];
     this.position = [dimensions.VIEWPORT_WIDTH / 2 - this.width / 2, dimensions.VIEWPORT_HEIGHT / 2 - this.height / 2];
@@ -38,18 +38,21 @@ class Copter {
     this.position[0] += this.velocityX * delta;
     this.position[1] += this.velocityY * delta;
 
-    const scale = dimensions.getScale(ctx);
+    if ((this.leftDown || this.rightDown) && this.leftDown !== this.rightDown) {
+      this.rotation += 0.005 * delta * (this.leftDown ? -1 : 1)
+    }
+
     ctx.save();
     ctx.translate(
-      Math.floor(this.position[0] * scale),
-      Math.floor(this.position[1] * scale)
+      Math.floor(this.position[0]),
+      Math.floor(this.position[1])
     );
     ctx.rotate(this.rotation);
 
     ctx.drawImage(
       images.drone,
-      -dimensions.DRONE_SIZE / 2,
-      -dimensions.DRONE_SIZE / 2,
+      Math.floor(-dimensions.DRONE_SIZE / 2),
+      Math.floor(-dimensions.DRONE_SIZE / 2),
       dimensions.DRONE_SIZE,
       dimensions.DRONE_SIZE
     );
@@ -68,8 +71,8 @@ class Copter {
     else if (e.key == 'w') { this.moveUp();    }
     else if (e.key == 's') { this.moveDown();  }
 
-    else if (e.key == 'ArrowLeft') { this.rotate(-1); }
-    else if (e.key == 'ArrowRight') { this.rotate(1); }
+    else if (e.key == 'ArrowLeft') { this.leftDown = true; }
+    else if (e.key == 'ArrowRight') { this.rightDown = true; }
 
     else if (e.code == 'Space') {
       this.shoot();
@@ -79,6 +82,9 @@ class Copter {
   _handleKeyUp(e) {
     if      (e.key == 'a' || e.key == 'd') { this.stopHorizontalMovement(); }
     else if (e.key == 'w' || e.key == 's') { this.stopVerticalMovement(); }
+
+    else if (e.key == 'ArrowLeft') { this.leftDown = false; }
+    else if (e.key == 'ArrowRight') { this.rightDown = false; }
   }
 
   moveLeft() {
@@ -103,11 +109,6 @@ class Copter {
 
   stopVerticalMovement() {
     this.acceleratorY = 0;
-  }
-
-  // direction is 1 or -1 for right/left
-  rotate(direction) {
-    this.rotation += ROTATION_INCREMENT * direction;
   }
 
   shoot() {

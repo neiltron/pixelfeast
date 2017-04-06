@@ -1,4 +1,5 @@
 import Tiles from './src/tiles';
+import * as dimensions from './src/dimensions';
 import Copter from './src/copter';
 import Camera from './src/camera';
 import events from './src/events';
@@ -20,6 +21,8 @@ function draw() {
 
   ctx.save();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const scale = dimensions.getScale(ctx);
+  ctx.scale(scale, scale);
 
   Camera.translate(ctx)
 
