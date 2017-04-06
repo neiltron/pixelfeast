@@ -1,5 +1,6 @@
 import events from './events';
 import * as dimensions from './dimensions';
+import {images} from './assets';
 
 const MOVEMENT_INCREMENT = 10;
 const ROTATION_INCREMENT = 2 * Math.PI / 20;
@@ -8,9 +9,6 @@ class Copter {
   constructor() {
     this.sprite = document.createElement('canvas');
     this.ctx = this.sprite.getContext('2d');
-
-    this.image = new Image();
-    this.image.src = '/static/drone.png';
 
     this.width = dimensions.TILE_SIZE * 4;
     this.height = dimensions.TILE_SIZE * 4;
@@ -27,7 +25,9 @@ class Copter {
     // this.ctx.fillStyle = 'black';
     // this.ctx.fillRect(0, 0, this.sprite.width, this.sprite.height);
 
-    this.image.onload = () => {
+    events.imagesLoaded.once(() => {
+    this.image = images.drone;
+
       this.ctx.drawImage(
         this.image,
         (this.sprite.width - this.width) / 2,
@@ -35,7 +35,7 @@ class Copter {
         this.width,
         this.height
       );
-    }
+    });
 
     this.ctx.save();
     this.ctx.rotate(this.rotation * (180 / Math.PI));

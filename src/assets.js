@@ -1,4 +1,7 @@
+import events from './events';
+
 export const images = {
+  drone: '/static/drone.png',
   grass: './static/grass.png',
 };
 
@@ -11,5 +14,8 @@ export function loadImages() {
     };
     image.onerror = reject;
     image.src = images[imageName];
-  })));
+  }))).then(() => {
+    events.imagesLoaded.dispatch(images);
+    return images;
+  });
 };
