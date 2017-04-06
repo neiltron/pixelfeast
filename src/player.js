@@ -17,8 +17,8 @@ class Player extends Copter {
     else if (e.key == 'w') { this.moveUp();    }
     else if (e.key == 's') { this.moveDown();  }
 
-    else if (e.key == 'ArrowLeft') { this.rotate(-1); }
-    else if (e.key == 'ArrowRight') { this.rotate(1); }
+    else if (e.key == 'ArrowLeft') { this.leftDown = true; }
+    else if (e.key == 'ArrowRight') { this.rightDown = true; }
 
     else if (e.code == 'Space') {
       this.shoot();
@@ -28,6 +28,9 @@ class Player extends Copter {
   _handleKeyUp(e) {
     if      (e.key == 'a' || e.key == 'd') { this.stopHorizontalMovement(); }
     else if (e.key == 'w' || e.key == 's') { this.stopVerticalMovement(); }
+
+    else if (e.key == 'ArrowLeft') { this.leftDown = false; }
+    else if (e.key == 'ArrowRight') { this.rightDown = false; }
   }
 
   _bind() {
