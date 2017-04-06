@@ -2,6 +2,7 @@ import Tiles from './src/tiles';
 import Copter from './src/copter';
 import Camera from './src/camera';
 import events from './src/events';
+import {loadImages} from './src/assets';
 
 let canvas = document.querySelector('canvas');
 canvas.width = 512;
@@ -24,7 +25,6 @@ function draw() {
 }
 
 Tiles.generate();
-draw();
 
 const resize = () => {
   const size = Math.min(window.innerWidth, window.innerHeight);
@@ -36,3 +36,6 @@ resize();
 
 window.addEventListener('resize', resize);
 window.addEventListener('keydown', e => { events.keyDown.dispatch(e); });
+
+
+loadImages().then(draw);
