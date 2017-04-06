@@ -1,5 +1,6 @@
 import Tiles from './src/tiles';
 import Copter from './src/copter';
+import events from './src/events';
 
 let canvas = document.querySelector('canvas');
 canvas.width = 512;
@@ -30,3 +31,4 @@ const resize = () => {
 resize();
 
 window.addEventListener('resize', resize);
+window.addEventListener('keydown', e => { events.keyDown.dispatch(e); });

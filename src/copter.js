@@ -1,3 +1,5 @@
+import events from './events';
+
 const MOVEMENT_INCREMENT = 10;
 
 class Copter {
@@ -28,7 +30,7 @@ class Copter {
   }
 
   _bind() {
-    document.body.addEventListener('keydown', this._handleKeyDown);
+    events.keyDown.add(this._handleKeyDown);
   }
 
   _handleKeyDown(e) {

@@ -1,7 +1,7 @@
 import {rand} from './utils';
 
-const VIEWPORT_WIDTH = 512;
-const VIEWPORT_HEIGHT = 512;
+const VIEWPORT_WIDTH = 1024;
+const VIEWPORT_HEIGHT = 1024;
 const TILE_SIZE = 32;
 const GRID_WIDTH = 64;
 const GRID_HEIGHT = 64;
