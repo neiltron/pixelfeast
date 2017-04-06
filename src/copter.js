@@ -19,29 +19,6 @@ class Copter {
 
     this.hasPackage = false;
 
-    // this.ctx.fillStyle = 'black';
-    // this.ctx.fillRect(0, 0, this.sprite.width, this.sprite.height);
-
-    events.imagesLoaded.once(() => {
-    this.image = images.drone;
-
-      // ctx.drawImage(
-      //   this.image,
-      //   this.width / 2,
-      //   this.height / 2,
-      //   this.width,
-      //   this.height
-      // );
-    });
-
-    // ctx.save();
-    // ctx.rotate(this.rotation * (180 / Math.PI));
-    // ctx.strokeStyle = '#fff';
-    // ctx.moveTo(this.sprite.width / 2, (this.sprite.width - this.width) / 2);
-    // ctx.lineTo(this.sprite.width / 2, this.sprite.height / 2);
-    // ctx.stroke();
-    // ctx.restore();
-
     this._handleKeyDown = this._handleKeyDown.bind(this);
 
     this._bind();
@@ -105,17 +82,13 @@ class Copter {
 
   // direction is 1 or -1 for right/left
   rotate(direction) {
-    console.log(direction, this.rotation);
-
     this.rotation += ROTATION_INCREMENT * direction;
   }
 
   shoot() {
-    console.log(Projectiles.length)
-
     Projectiles.push(new Projectile({
       direction: this.rotation,
-      position: [this.position[0] + (dimensions.DRONE_SIZE / 1.5), this.position[1] + (dimensions.DRONE_SIZE / 1.5)]
+      position: this.position.slice(),
     }));
   }
 }
