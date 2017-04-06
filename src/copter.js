@@ -1,4 +1,5 @@
 import events from './events';
+import * as dimensions from './dimensions';
 
 const MOVEMENT_INCREMENT = 10;
 
@@ -26,7 +27,8 @@ class Copter {
   update() {}
 
   draw(ctx) {
-    ctx.drawImage(this.sprite, this.position[0], this.position[1]);
+    const scale = dimensions.getScale(ctx);
+    ctx.drawImage(this.sprite, Math.floor(this.position[0] * scale), Math.floor(this.position[1] * scale), this.sprite.width * scale, this.sprite.height * scale);
   }
 
   _bind() {

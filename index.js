@@ -9,10 +9,7 @@ canvas.height = 512;
 let ctx = canvas.getContext('2d');
 
 function draw() {
-  ctx.save();
   Tiles.draw(ctx);
-  ctx.restore();
-
   Copter.draw(ctx);
 
   requestAnimationFrame(draw);
