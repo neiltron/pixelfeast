@@ -1,6 +1,7 @@
 import {rand} from './utils';
 import * as dimensions from './dimensions';
 import {images} from './assets';
+import Camera from './camera';
 
 const TILES = {
   GRASS: 0,
@@ -108,10 +109,19 @@ export default {
 
   draw(ctx) {
     const tileSize = Math.floor(dimensions.TILE_SIZE);
+    const bounds = Camera.getBounds();
 
     let tile, y, x;
     for (y = 0; y < dimensions.GRID_HEIGHT; y += 1) {
+      if ((y + 1) * dimensions.TILE_SIZE < bounds.y || y * dimensions.TILE_SIZE > bounds.y + bounds.h) {
+        continue;
+      }
+
       for (x = 0; x < dimensions.GRID_WIDTH; x += 1) {
+        if ((x + 1) * dimensions.TILE_SIZE < bounds.x || x * dimensions.TILE_SIZE > bounds.x + bounds.w) {
+          continue;
+        }
+
         tile = tiles[y * dimensions.GRID_WIDTH + x];
         ctx.drawImage(images[IMAGES[tile]], Math.floor(x * dimensions.TILE_SIZE), Math.floor(y * dimensions.TILE_SIZE), tileSize + 1, tileSize + 1);
       }

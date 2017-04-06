@@ -9,7 +9,7 @@ export default class Projectile {
     this.height = 164 / 6;
 
     this.image = new Image();
-    this.image.src = '/static/bullet.png';
+    this.image.src = './static/bullet.png';
   }
 
   update() {
