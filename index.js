@@ -1,59 +1,128 @@
-/*
-  This is a bare-bones, no-bullshit
-  example of using browserify + npm.
- */
+var canvas = document.querySelector('canvas');
+canvas.width = 512;
+canvas.height = 512;
 
-// Our third-party dependency from npm
+var ctx = canvas.getContext('2d');
 
-var MapGenerator = require('node-voronoi-map');
-var mapGenerator = new MapGenerator({
-    width:1920,
-    height:960,
-    seed:992878989,
-    shapeSeed:60441019,
-    islandShape:'perlin',
-    pointSelection:'square',
-    oceanRatio:0.5,
-    islandFactor:1.0, //1.0 means no small islands; 2.0 leads to a lot
-    numberOfLands:'',
-    numberOfPoints:200,
-    lakeThreshold:0.3,
-    riverChance:100,
-    roadElevationThresholds:'0, 0.05, 0.37, 0.64',//comma separated
-});
-var map = mapGenerator.generate();
-// console.log(map.map.buildGraph());
+const TILE_SIZE = 8;
+const GRID_WIDTH = 64;
+const GRID_HEIGHT = 64;
+const TILES = {
+  GRASS: 0,
+  ROAD: 1,
+  WATER: 2,
+};
 
-console.log(map)
+const COLORS = [
+  '#0f0',
+  '#999',
+  '#00f',
+];
 
-const canvas = document.querySelector('canvas'),
-      ctx = canvas.getContext('2d');
+const DIRECTIONS = {
+  NORTH: [0, -1],
+  EAST: [1, 0],
+  SOUTH: [0, 1],
+  WEST: [-1, 0],
+};
 
+var tiles = Array.from(Array(GRID_WIDTH * GRID_HEIGHT)).map(x => TILES.GRASS);
 
-canvas.width = document.body.clientWidth;
-canvas.height = document.body.clientHeight;
+function rand(min, max) {
+  return min + Math.floor(Math.random() * (max - min));
+}
 
-map.map.centers.forEach(shape => {
-  var dims = [];
+function buildRoadVertical(startingColumn) {
+  const {NORTH, EAST, SOUTH, WEST} = DIRECTIONS;
 
-  ctx.beginPath();
-  ctx.strokeStyle = '#f0f';
+  let x = startingColumn;
+  let y = GRID_HEIGHT - 1;
+  let direction = NORTH;
+  let possibleDirections;
+  let steps = 0;
+  let minSteps = 1;
 
-  if (shape.biome == 'OCEAN') {
-    ctx.fillStyle = '#6494a0';
-  } else {
-    ctx.fillStyle = '#bece9d';
+  while (y >= 0) {
+    tiles[y * GRID_WIDTH + x] = TILES.ROAD;
+    if (steps > minSteps) {
+      steps = 0;
+      minSteps = rand(3, 5);
+      if (direction === NORTH) {
+        possibleDirections = [NORTH, EAST, WEST];
+      } else if (direction === SOUTH) {
+        possibleDirections = [EAST, WEST];
+      } else if (direction === EAST) {
+        possibleDirections = [NORTH, EAST];
+      } else if (direction === WEST) {
+        possibleDirections = [NORTH, WEST];
+      }
+
+      direction = possibleDirections[rand(0, possibleDirections.length)];
+    }
+
+    steps += 1;
+
+    x = Math.max(0, Math.min(GRID_WIDTH - 1, x + direction[0]));
+    y = Math.min(GRID_WIDTH - 1, y + direction[1]);
   }
+}
 
-  ctx.moveTo(shape.corners[0].point.x, shape.corners[0].point.y);
+function buildRoadHorizontal(startingRow) {
+  const {NORTH, EAST, SOUTH, WEST} = DIRECTIONS;
 
-  for (var i = 1; i < shape.corners.length; i++) {
-    let corner = shape.corners[i];
+  let x = GRID_WIDTH - 1;
+  let y = startingRow;
+  let direction = WEST;
+  let possibleDirections;
+  let steps = 0;
+  let minSteps = 1;
 
-    ctx.lineTo(corner.point.x, corner.point.y);
+  while (x >= 0) {
+    tiles[y * GRID_WIDTH + x] = TILES.ROAD;
+    if (steps > minSteps) {
+      steps = 0;
+      minSteps = rand(3, 5);
+      if (direction === WEST) {
+        possibleDirections = [WEST, NORTH, SOUTH];
+      } else if (direction === EAST) {
+        possibleDirections = [NORTH, SOUTH];
+      } else if (direction === NORTH) {
+        possibleDirections = [WEST, NORTH];
+      } else if (direction === SOUTH) {
+        possibleDirections = [WEST, SOUTH];
+      }
+
+      direction = possibleDirections[rand(0, possibleDirections.length)];
+    }
+
+    steps += 1;
+
+    x = Math.min(GRID_WIDTH - 1, x + direction[0]);
+    y = Math.max(0, Math.min(GRID_WIDTH - 1, y + direction[1]));
   }
+}
 
-  ctx.closePath();
-  // ctx.stroke();
-  ctx.fill();
-})
+function draw() {
+  var tile;
+  for (let y = 0; y < GRID_HEIGHT; y += 1) {
+    for (let x = 0; x < GRID_WIDTH; x += 1) {
+      tile = tiles[y * GRID_WIDTH + x];
+      ctx.fillStyle = COLORS[tile];
+      ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
+  }
+}
+
+for (let x = 0; x < GRID_WIDTH; x += 1) {
+  if (Math.random() < 0.1) {
+    buildRoadHorizontal(x);
+  }
+}
+
+for (let y = 0; y < GRID_HEIGHT; y += 1) {
+  if (Math.random() < 0.1) {
+    buildRoadVertical(y);
+  }
+}
+
+draw();
