@@ -116,7 +116,7 @@ export default {
       for (x = 0; x < dimensions.GRID_WIDTH; x += 1) {
         tile = tiles[y * dimensions.GRID_WIDTH + x];
         ctx.fillStyle = COLORS[tile];
-        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+        ctx.fillRect(Math.floor(x * dimensions.TILE_SIZE * scale), Math.floor(y * dimensions.TILE_SIZE * scale), tileSize + 1, tileSize + 1);
       }
     }
   }
