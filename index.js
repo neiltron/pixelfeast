@@ -22,7 +22,6 @@ const resize = () => {
   const size = Math.min(window.innerWidth, window.innerHeight);
   canvas.width = size;
   canvas.height = size;
-  draw();
 };
 
 resize();
