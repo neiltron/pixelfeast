@@ -10,8 +10,8 @@ class Copter {
     this.sprite = document.createElement('canvas');
     this.ctx = this.sprite.getContext('2d');
 
-    this.width = dimensions.TILE_SIZE * 4;
-    this.height = dimensions.TILE_SIZE * 4;
+    this.width = dimensions.DRONE_SIZE;
+    this.height = dimensions.DRONE_SIZE;
 
     this.sprite.width = this.sprite.style.width = this.width * 1.5;
     this.sprite.height = this.sprite.style.height = this.height * 1.5;
