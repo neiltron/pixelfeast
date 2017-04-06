@@ -5,13 +5,11 @@ import {images} from './assets';
 const TILES = {
   GRASS: 0,
   ROAD: 1,
-  WATER: 2,
 };
 
-const COLORS = [
-  '#0f0',
-  '#999',
-  '#00f',
+const IMAGES = [
+  'grass',
+  'road',
 ];
 
 const DIRECTIONS = {
@@ -116,12 +114,7 @@ export default {
     for (y = 0; y < dimensions.GRID_HEIGHT; y += 1) {
       for (x = 0; x < dimensions.GRID_WIDTH; x += 1) {
         tile = tiles[y * dimensions.GRID_WIDTH + x];
-        ctx.fillStyle = COLORS[tile];
-        if (tile === TILES.GRASS) {
-          ctx.drawImage(images.grass, Math.floor(x * dimensions.TILE_SIZE * scale), Math.floor(y * dimensions.TILE_SIZE * scale), tileSize + 1, tileSize + 1);
-        } else {
-          ctx.fillRect(Math.floor(x * dimensions.TILE_SIZE * scale), Math.floor(y * dimensions.TILE_SIZE * scale), tileSize + 1, tileSize + 1);
-        }
+        ctx.drawImage(images[IMAGES[tile]], Math.floor(x * dimensions.TILE_SIZE * scale), Math.floor(y * dimensions.TILE_SIZE * scale), tileSize + 1, tileSize + 1);
       }
     }
   }

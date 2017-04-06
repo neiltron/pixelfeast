@@ -3,6 +3,7 @@ import events from './events';
 export const images = {
   drone: '/static/drone.png',
   grass: './static/grass.png',
+  road: './static/road.png',
 };
 
 export function loadImages() {
