@@ -3,6 +3,7 @@ import * as dimensions from './dimensions';
 import {images} from './assets';
 import Projectiles from './projectiles';
 import Projectile from './projectile';
+import { clamp } from './utils';
 
 const MOVEMENT_INCREMENT = 10;
 const ROTATION_INCREMENT = 2 * Math.PI / 20;
@@ -31,14 +32,8 @@ class Copter {
   }
 
   draw(ctx, delta) {
-    this.velocityX += this.acceleratorX * delta;
-    this.velocityY += this.acceleratorY * delta;
-
-    if (this.velocityX > 1) { this.velocityX = 1; }
-    else if (this.velocityX < -1) { this.velocityX = -1; }
-
-    if (this.velocityY > 1) { this.velocityY = 1; }
-    else if (this.velocityY < -1) { this.velocityY = -1; }
+    this.velocityX += clamp(this.acceleratorX * delta, -1, 1);
+    this.velocityY += clamp(this.acceleratorY * delta, -1, 1);
 
     this.position[0] += this.velocityX * delta;
     this.position[1] += this.velocityY * delta;
