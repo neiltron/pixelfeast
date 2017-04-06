@@ -1,9 +1,11 @@
 import {rand} from './utils';
 
-export const TILE_SIZE = 8;
-export const GRID_WIDTH = 64;
-export const GRID_HEIGHT = 64;
-export const TILES = {
+const VIEWPORT_WIDTH = 512;
+const VIEWPORT_HEIGHT = 512;
+const TILE_SIZE = 32;
+const GRID_WIDTH = 64;
+const GRID_HEIGHT = 64;
+const TILES = {
   GRASS: 0,
   ROAD: 1,
   WATER: 2,
@@ -94,6 +96,20 @@ function buildRoadHorizontal(startingRow) {
   }
 }
 
+const getScale = ctx => {
+  const {width, height} = ctx.canvas;
+  return width < height ?  (width / VIEWPORT_WIDTH) : height / VIEWPORT_HEIGHT;
+};
+
+const scaleCanvas = ctx => {
+  const {width, height} = ctx.canvas;
+  const scale = getScale(ctx);
+
+  ctx.translate(Math.floor(width / 2), Math.floor(height / 2));
+  ctx.scale(scale, scale);
+  ctx.translate(-Math.floor(width / 2), -Math.floor(height /2));
+};;
+
 export default {
   generate() {
     tiles = Array.from(Array(GRID_WIDTH * GRID_HEIGHT)).map(x => TILES.GRASS);
@@ -112,12 +128,15 @@ export default {
   },
 
   draw(ctx) {
+    const scale = getScale(ctx);
+    const tileSize = Math.floor(TILE_SIZE * scale);
+
     let tile, y, x;
     for (y = 0; y < GRID_HEIGHT; y += 1) {
       for (x = 0; x < GRID_WIDTH; x += 1) {
         tile = tiles[y * GRID_WIDTH + x];
         ctx.fillStyle = COLORS[tile];
-        ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
       }
     }
   }
