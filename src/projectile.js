@@ -3,7 +3,7 @@ import * as dimensions from './dimensions';
 export default class Projectile {
   constructor(opts) {
     this.direction = opts.direction;
-    this.velocity = 4;
+    this.velocity = 20;
 
     this.position = opts.position;
 
