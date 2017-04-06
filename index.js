@@ -1,5 +1,6 @@
 import Tiles from './src/tiles';
 import Copter from './src/copter';
+import Camera from './src/camera';
 import events from './src/events';
 
 let canvas = document.querySelector('canvas');
@@ -9,8 +10,15 @@ canvas.height = 512;
 let ctx = canvas.getContext('2d');
 
 function draw() {
+  ctx.save();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  Camera.translate(ctx)
+
   Tiles.draw(ctx);
   Copter.draw(ctx);
+
+  ctx.restore();
 
   requestAnimationFrame(draw);
 }
