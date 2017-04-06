@@ -3,6 +3,7 @@ import Copter from './src/copter';
 import Camera from './src/camera';
 import events from './src/events';
 import {loadImages} from './src/assets';
+import Projectiles from './src/projectiles';
 
 let canvas = document.querySelector('canvas');
 canvas.width = 512;
@@ -17,6 +18,13 @@ function draw() {
   Camera.translate(ctx)
 
   Tiles.draw(ctx);
+
+  Projectiles.forEach(projectile => {
+    projectile.update();
+    projectile.draw(ctx);
+  });
+
+
   Copter.draw(ctx);
 
   ctx.restore();
