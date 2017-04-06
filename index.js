@@ -1,4 +1,5 @@
 import Tiles from './src/tiles';
+import Copter from './src/copter';
 
 let canvas = document.querySelector('canvas');
 canvas.width = 512;
@@ -10,6 +11,10 @@ function draw() {
   ctx.save();
   Tiles.draw(ctx);
   ctx.restore();
+
+  Copter.draw(ctx);
+
+  requestAnimationFrame(draw);
 }
 
 Tiles.generate();
