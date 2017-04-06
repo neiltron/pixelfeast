@@ -7,7 +7,6 @@ import Camera from './src/camera';
 import events from './src/events';
 import {loadImages, images} from './src/assets';
 import Projectiles from './src/projectiles';
-import * as dimensions from './src/dimensions';
 
 let canvas = document.querySelector('canvas');
 canvas.width = 512;

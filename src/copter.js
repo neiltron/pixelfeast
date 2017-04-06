@@ -29,8 +29,12 @@ class Copter {
   }
 
   draw(ctx, delta) {
-    this.velocityX += clamp(this.acceleratorX * delta, -1, 1);
-    this.velocityY += clamp(this.acceleratorY * delta, -1, 1);
+
+    this.velocityX += this.acceleratorX * delta;
+    this.velocityY += this.acceleratorY * delta;
+
+    this.velocityX = clamp(this.velocityX, -1, 1);
+    this.velocityY = clamp(this.velocityY, -1, 1);
 
     this.position[0] += this.velocityX * delta;
     this.position[1] += this.velocityY * delta;
