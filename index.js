@@ -11,7 +11,13 @@ canvas.height = 512;
 
 let ctx = canvas.getContext('2d');
 
+let lastUpdate = Date.now();
+
 function draw() {
+  const delta = Date.now() - lastUpdate;
+
+  lastUpdate = Date.now();
+
   ctx.save();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -25,7 +31,7 @@ function draw() {
   });
 
 
-  Copter.draw(ctx);
+  Copter.draw(ctx, delta);
 
   ctx.restore();
 
@@ -44,6 +50,7 @@ resize();
 
 window.addEventListener('resize', resize);
 window.addEventListener('keydown', e => { events.keyDown.dispatch(e); });
+window.addEventListener('keyup', e => { events.keyUp.dispatch(e); });
 
 
 loadImages().then(draw);

@@ -12,6 +12,11 @@ class Copter {
     this.width = dimensions.DRONE_SIZE;
     this.height = dimensions.DRONE_SIZE;
 
+    this.velocityX = 0;
+    this.velocityY = 0;
+
+    this.acceleratorX = 0;
+    this.acceleratorY = 0;
 
     this.center = [dimensions.VIEWPORT_WIDTH / 2 - this.width / 2, dimensions.VIEWPORT_HEIGHT / 2 - this.height / 2];
     this.position = [dimensions.VIEWPORT_WIDTH / 2 - this.width / 2, dimensions.VIEWPORT_HEIGHT / 2 - this.height / 2];
@@ -20,13 +25,24 @@ class Copter {
     this.hasPackage = false;
 
     this._handleKeyDown = this._handleKeyDown.bind(this);
+    this._handleKeyUp = this._handleKeyUp.bind(this);
 
     this._bind();
   }
 
-  update() {}
+  draw(ctx, delta) {
+    this.velocityX += this.acceleratorX * delta;
+    this.velocityY += this.acceleratorY * delta;
 
-  draw(ctx) {
+    if (this.velocityX > 1) { this.velocityX = 1; }
+    else if (this.velocityX < -1) { this.velocityX = -1; }
+
+    if (this.velocityY > 1) { this.velocityY = 1; }
+    else if (this.velocityY < -1) { this.velocityY = -1; }
+
+    this.position[0] += this.velocityX * delta;
+    this.position[1] += this.velocityY * delta;
+
     const scale = dimensions.getScale(ctx);
     ctx.save();
     ctx.translate(
@@ -48,6 +64,7 @@ class Copter {
 
   _bind() {
     events.keyDown.add(this._handleKeyDown);
+    events.keyUp.add(this._handleKeyUp);
   }
 
   _handleKeyDown(e) {
@@ -64,20 +81,33 @@ class Copter {
     }
   }
 
+  _handleKeyUp(e) {
+    if      (e.key == 'a' || e.key == 'd') { this.stopHorizontalMovement(); }
+    else if (e.key == 'w' || e.key == 's') { this.stopVerticalMovement(); }
+  }
+
   moveLeft() {
-    this.position[0] -= MOVEMENT_INCREMENT;
+    this.acceleratorX = -.002;
   }
 
   moveRight() {
-    this.position[0] += MOVEMENT_INCREMENT;
+    this.acceleratorX = .002;
   }
 
   moveUp() {
-    this.position[1] -= MOVEMENT_INCREMENT;
+    this.acceleratorY = -.002;
   }
 
   moveDown() {
-    this.position[1] += MOVEMENT_INCREMENT;
+    this.acceleratorY = .002;
+  }
+
+  stopHorizontalMovement() {
+    this.acceleratorX = 0;
+  }
+
+  stopVerticalMovement() {
+    this.acceleratorY = 0;
   }
 
   // direction is 1 or -1 for right/left
