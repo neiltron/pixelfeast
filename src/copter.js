@@ -40,6 +40,8 @@ class Copter {
     this.velocityX = clamp(this.velocityX, -1, 1);
     this.velocityY = clamp(this.velocityY, -1, 1);
 
+    this.checkOOB();
+
     this.position[0] += this.velocityX * delta;
     this.position[1] += this.velocityY * delta;
 
@@ -113,6 +115,26 @@ class Copter {
 
   explode() {
     this.isExploding = true;
+  }
+
+  checkOOB() {
+    if (this.position[0] < 0) {
+      this.position[0] = 1;
+      this.velocityX = .05;
+      this.acceleratorX = .000005;
+    } else if (this.position[0] > dimensions.GRID_WIDTH * dimensions.TILE_SIZE + 1) {
+      this.position[0] = dimensions.GRID_WIDTH * dimensions.TILE_SIZE;
+      this.velocityX = -.05;
+      this.acceleratorX = -.000005;
+    } else if (this.position[1] < 0) {
+      this.position[1] = 1;
+      this.velocityY = .05;
+      this.acceleratorY = .000005;
+    } else if (this.position[1] > dimensions.GRID_HEIGHT * dimensions.TILE_SIZE + 1) {
+      this.position[1] = dimensions.GRID_HEIGHT * dimensions.TILE_SIZE;
+      this.velocityY = -.05;
+      this.acceleratorY = -.000005;
+    }
   }
 }
 
