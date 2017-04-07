@@ -7,3 +7,12 @@
 > DRONE: OMG.
 
 > HUMAN: Yea, welcome to the club, pal.
+
+Playable at https://neiltron.github.io/pixelfeast/
+
+# MADE BY
+
+- Michael Novia
+- Neil Pullman
+- Benjamin McKay
+- Matt Campbell
