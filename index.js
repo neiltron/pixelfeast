@@ -1,4 +1,5 @@
 import Tiles from './src/tiles';
+import Navigation from './src/navigation';
 import * as dimensions from './src/dimensions';
 import Copter from './src/copter';
 import Player from './src/player';
@@ -7,6 +8,8 @@ import Camera from './src/camera';
 import events from './src/events';
 import {loadImages, images} from './src/assets';
 import Projectiles from './src/projectiles';
+import Healthhud from './src/healthhud';
+
 
 let canvas = document.querySelector('canvas');
 canvas.width = 512;
@@ -42,6 +45,18 @@ function draw() {
     const bounds = Camera.getBounds();
 
     Projectiles.forEach((projectile, index) => {
+      if (projectile.detectCollision(Player)) {
+        if (projectile.playerID != Player.id) {
+          Projectiles.splice(index, 1);
+
+          Player.hits++;
+
+          if (Player.hits >= 4) {
+            Player.explode();
+          }
+        }
+      }
+
       // check for enemy collisions
       for (var i = 0; i < enemies.length; i++) {
         let enemy = enemies[i];
@@ -84,7 +99,11 @@ function draw() {
     }
   });
 
+  Navigation.draw(ctx);
+
   Player.draw(ctx, delta);
+
+  Healthhud(ctx);
 
   ctx.restore();
 }
