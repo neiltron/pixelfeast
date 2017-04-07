@@ -5,12 +5,16 @@ import Camera from './camera';
 
 const TILES = {
   GRASS: 0,
-  ROAD: 1,
+  ROAD_H: 1,
+  ROAD_V: 2,
+  ROAD_INTERSECTION: 3,
 };
 
 const IMAGES = [
   'grass',
-  'road',
+  'road1',
+  'road2',
+  'road3',
 ];
 
 const DIRECTIONS = {
@@ -22,93 +26,40 @@ const DIRECTIONS = {
 
 let tiles;
 
-function buildRoadVertical(startingColumn) {
-  const {NORTH, EAST, SOUTH, WEST} = DIRECTIONS;
-
-  let x = startingColumn;
-  let y = dimensions.GRID_HEIGHT - 1;
-  let direction = NORTH;
-  let possibleDirections;
-  let steps = 0;
-  let minSteps = 1;
-
-  while (y >= 0) {
-    tiles[y * dimensions.GRID_WIDTH + x] = TILES.ROAD;
-    if (steps > minSteps) {
-      steps = 0;
-      minSteps = rand(3, 5);
-      if (direction === NORTH) {
-        possibleDirections = [NORTH, EAST, WEST];
-      } else if (direction === SOUTH) {
-        possibleDirections = [EAST, WEST];
-      } else if (direction === EAST) {
-        possibleDirections = [NORTH, EAST];
-      } else if (direction === WEST) { possibleDirections = [NORTH, WEST]; }
-
-      direction = possibleDirections[rand(0, possibleDirections.length)];
+const generateRoads = () => {
+  for (let x = 0; x < dimensions.GRID_WIDTH; x += 1) {
+    if (Math.random() < 0.75) {
+      continue;
+    }
+    for (let y = 0; y < dimensions.GRID_HEIGHT; y += 1) {
+      let index = y * dimensions.GRID_WIDTH + x;
+      tiles[index] = tiles[index] === TILES.GRASS ? TILES.ROAD_V : TILES.ROAD_INTERSECTION;
     }
 
-    steps += 1;
-
-    x = Math.max(0, Math.min(dimensions.GRID_WIDTH - 1, x + direction[0]));
-    y = Math.min(dimensions.GRID_WIDTH - 1, y + direction[1]);
+    x += 4;
   }
-}
 
-function buildRoadHorizontal(startingRow) {
-  const {NORTH, EAST, SOUTH, WEST} = DIRECTIONS;
-
-  let x = dimensions.GRID_WIDTH - 1;
-  let y = startingRow;
-  let direction = WEST;
-  let possibleDirections;
-  let steps = 0;
-  let minSteps = 1;
-
-  while (x >= 0) {
-    tiles[y * dimensions.GRID_WIDTH + x] = TILES.ROAD;
-    if (steps > minSteps) {
-      steps = 0;
-      minSteps = rand(3, 5);
-      if (direction === WEST) {
-        possibleDirections = [WEST, NORTH, SOUTH];
-      } else if (direction === EAST) {
-        possibleDirections = [NORTH, SOUTH];
-      } else if (direction === NORTH) {
-        possibleDirections = [WEST, NORTH];
-      } else if (direction === SOUTH) {
-        possibleDirections = [WEST, SOUTH];
-      }
-
-      direction = possibleDirections[rand(0, possibleDirections.length)];
+  for (let y = 0; y < dimensions.GRID_HEIGHT; y += 1) {
+    if (Math.random() < 0.75) {
+      continue;
     }
 
-    steps += 1;
+    for (let x = 0; x < dimensions.GRID_WIDTH; x += 1) {
+      let index = y * dimensions.GRID_WIDTH + x;
+      tiles[index] = tiles[index] === TILES.GRASS ? TILES.ROAD_H : TILES.ROAD_INTERSECTION;
+    }
 
-    x = Math.min(dimensions.GRID_WIDTH - 1, x + direction[0]);
-    y = Math.max(0, Math.min(dimensions.GRID_WIDTH - 1, y + direction[1]));
+    y += 2;
   }
-}
+};
 
 export default {
   generate() {
     tiles = Array.from(Array(dimensions.GRID_WIDTH * dimensions.GRID_HEIGHT)).map(x => TILES.GRASS);
-
-    for (let x = 0; x < dimensions.GRID_WIDTH; x += 1) {
-      if (Math.random() < 0.1) {
-        buildRoadHorizontal(x);
-      }
-    }
-
-    for (let y = 0; y < dimensions.GRID_HEIGHT; y += 1) {
-      if (Math.random() < 0.1) {
-        buildRoadVertical(y);
-      }
-    }
+    generateRoads();
   },
 
   draw(ctx) {
-    const tileSize = Math.floor(dimensions.TILE_SIZE);
     const bounds = Camera.getBounds();
 
     let tile, y, x;
@@ -123,7 +74,7 @@ export default {
         }
 
         tile = tiles[y * dimensions.GRID_WIDTH + x];
-        ctx.drawImage(images[IMAGES[tile]], Math.floor(x * dimensions.TILE_SIZE), Math.floor(y * dimensions.TILE_SIZE), tileSize + 1, tileSize + 1);
+        ctx.drawImage(images[IMAGES[tile]], Math.floor(x * dimensions.TILE_SIZE), Math.floor(y * dimensions.TILE_SIZE), dimensions.TILE_SIZE, dimensions.TILE_SIZE);
       }
     }
   }

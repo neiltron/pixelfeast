@@ -4,7 +4,9 @@ export const images = {
   drone: './static/drone.png',
   drone_enemy: './static/drone_enemy.png',
   grass: './static/grass.png',
-  road: './static/road.png',
+  road1: './static/road1.png',
+  road2: './static/road2.png',
+  road3: './static/road3.png',
 };
 
 export function loadImages() {
