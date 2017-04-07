@@ -17,6 +17,7 @@ export const images = {
   house8: './static/house-8.png',
   house9: './static/house-9.png',
   house10: './static/house-10.png',
+  explosion: './static/explosion.png',
 };
 
 export function loadImages() {

@@ -29,6 +29,7 @@ class Copter {
     this.rotation = 0;
 
     this.hasPackage = false;
+    this.explosionFrame = -1;
   }
 
   update(delta) {
@@ -52,13 +53,17 @@ class Copter {
     }
 
     // temporary "explosion" visual is scaling down to 0
-    if (this.isExploding) {
+    if (this.explosionFrame > 0) {
       this.scale -= .05;
     }
   }
 
   draw(ctx, delta) {
     this.update(delta);
+
+    if (this.explosionFrame >= 0) {
+      this.explosionFrame += .25;
+    }
 
     ctx.save();
     ctx.translate(
@@ -116,7 +121,7 @@ class Copter {
   }
 
   explode() {
-    this.isExploding = true;
+    this.explosionFrame = 0;
 
     events.explode.dispatch();
   }

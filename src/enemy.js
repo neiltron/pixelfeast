@@ -12,6 +12,19 @@ class Enemy extends Copter {
       dimensions.DRONE_SIZE * this.scale, // temporary "explosion" visual is scaling down to 0
       dimensions.DRONE_SIZE * this.scale
     );
+
+    if (this.explosionFrame > 0) {
+      ctx.drawImage(
+        images.explosion,
+        Math.floor(Math.floor(this.explosionFrame) / 5) * 64,
+        (Math.floor(this.explosionFrame) % 5) * 64,
+        64, 64,
+        -dimensions.DRONE_SIZE / 2,
+        -dimensions.DRONE_SIZE / 2,
+        dimensions.DRONE_SIZE,
+        dimensions.DRONE_SIZE
+      );
+    }
   }
 
   _update(delta) {
