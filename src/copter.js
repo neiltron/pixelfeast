@@ -54,7 +54,7 @@ class Copter {
 
     // temporary "explosion" visual is scaling down to 0
     if (this.explosionFrame > 0) {
-      this.scale -= .05;
+      this.scale -= .01;
     }
   }
 
@@ -62,7 +62,7 @@ class Copter {
     this.update(delta);
 
     if (this.explosionFrame >= 0) {
-      this.explosionFrame += .25;
+      this.explosionFrame += .1;
     }
 
     ctx.save();
