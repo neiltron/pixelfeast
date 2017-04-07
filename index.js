@@ -19,9 +19,15 @@ let lastUpdate = Date.now();
 const enemies = [];
 
 function draw() {
+  requestAnimationFrame(draw);
   const delta = Date.now() - lastUpdate;
 
   lastUpdate = Date.now();
+
+  if (delta > 1000) {
+    // ignore this is a huge delta, probably tab was unfocused for a while
+    return;
+  }
 
   ctx.save();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -81,14 +87,13 @@ function draw() {
   Player.draw(ctx, delta);
 
   ctx.restore();
-
-  requestAnimationFrame(draw);
 }
 
 function createEnemies() {
-  for (var i = 0; i < 10; i += 1) {
+  for (var i = 0; i < 50; i += 1) {
     enemies.push(new Enemy({
       position: [Math.random() * dimensions.MAP_PIXEL_WIDTH, Math.random() * dimensions.MAP_PIXEL_HEIGHT]
+      // position: [dimensions.MAP_PIXEL_WIDTH / 2 + (Math.random() * dimensions.VIEWPORT_WIDTH * 2 - dimensions.VIEWPORT_WIDTH), dimensions.MAP_PIXEL_HEIGHT / 2 + (Math.random() * dimensions.VIEWPORT_WIDTH * 2 - dimensions.VIEWPORT_WIDTH)]
     }));
   }
 }
