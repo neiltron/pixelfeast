@@ -46,6 +46,12 @@ body {
   height: auto;
 }
 
+#intro .instruction {
+  position: absolute;
+  bottom: 5vw;
+  width: 40vw;
+}
+
 canvas {
   display: inline-block;
 }
