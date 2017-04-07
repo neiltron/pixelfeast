@@ -103,11 +103,20 @@ const generateHouses = () => {
   }
 };
 
+export const targetLocation = {
+  x: 0,
+  y: 0,
+};
+
 export default {
   generate() {
     tiles = Array.from(Array(dimensions.GRID_WIDTH * dimensions.GRID_HEIGHT)).map(x => TILES.GRASS);
     generateRoads();
     generateHouses();
+
+    let house = tileObjects[rand(0, tileObjects.length)];
+    targetLocation.x = house.x + Math.floor(house.width / 2);
+    targetLocation.y = house.y + Math.floor(house.height / 2);
   },
 
   draw(ctx) {

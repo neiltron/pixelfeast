@@ -1,4 +1,5 @@
 import Tiles from './src/tiles';
+import Navigation from './src/navigation';
 import * as dimensions from './src/dimensions';
 import Copter from './src/copter';
 import Player from './src/player';
@@ -85,6 +86,8 @@ function draw() {
   });
 
   Player.draw(ctx, delta);
+
+  Navigation.draw(ctx);
 
   ctx.restore();
 }
