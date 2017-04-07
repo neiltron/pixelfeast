@@ -132,15 +132,24 @@ const resize = () => {
   canvas.height = size;
 };
 
-resize();
+function init() {
+  resize();
 
+  events.reset.add(() => {
+    resetGame();
+  })
+
+  loadImages().then(draw).then(resetGame);
+}
+
+let started = false;
 window.addEventListener('resize', resize);
 window.addEventListener('keydown', e => { events.keyDown.dispatch(e); });
-window.addEventListener('keyup', e => { events.keyUp.dispatch(e); });
-
-events.reset.add(() => {
-  resetGame();
-})
-
-
-loadImages().then(draw).then(resetGame);
+window.addEventListener('keyup', e => {
+  if (!started && e.keyCode === 32) {
+    document.getElementById('intro').classList.add('hide');
+    started = true;
+    init();
+  }
+  events.keyUp.dispatch(e);
+});
