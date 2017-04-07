@@ -117,6 +117,8 @@ class Copter {
 
   explode() {
     this.isExploding = true;
+
+    events.explode.dispatch();
   }
 
   checkOOB() {

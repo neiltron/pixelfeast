@@ -38,14 +38,14 @@ function draw() {
       for (var i = 0; i < enemies.length; i++) {
         let enemy = enemies[i];
 
+        // drones can't kill themselves
         if (projectile.playerID == enemy.id) { continue; }
 
-        if (enemy.position[1] + enemy.height < bounds.y || enemy.position[1] > bounds.y + bounds.h) {
-          return;
-        }
-
-        if (enemy.position[0] + enemy.width < bounds.x || enemy.position[0] > bounds.x + bounds.w) {
-          return;
+        if (
+          (enemy.position[1] + enemy.height < bounds.y || enemy.position[1] > bounds.y + bounds.h)
+          && (enemy.position[0] + enemy.width < bounds.x || enemy.position[0] > bounds.x + bounds.w)
+          ) {
+          continue;
         }
 
         if (projectile.detectCollision(enemy)) {
