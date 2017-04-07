@@ -5,6 +5,13 @@ import Projectiles from './projectiles';
 import Projectile from './projectile';
 import { clamp } from './utils';
 
+const rotorPos = [
+  [-41, -45],
+  [40, -45],
+  [-41, 32],
+  [40, 32],
+];
+
 class Copter {
   constructor(opts) {
     opts = opts || {};
@@ -85,6 +92,20 @@ class Copter {
     ctx.restore();
   }
 
+  drawRotors(ctx) {
+    if (!this.isActive || this.explosionFrame !== -1) {
+      return;
+    }
+
+    rotorPos.forEach(pos => {
+      ctx.save();
+      ctx.translate(pos[0], pos[1]);
+      ctx.rotate((Date.now() * 0.02) % Math.PI * 2);
+      ctx.drawImage(images.rotor, -10, -10, 21, 21);
+      ctx.restore();
+    });
+  }
+
   drawSprite(ctx) {
     if (this.hasPackage) {
       ctx.drawImage(
@@ -103,6 +124,8 @@ class Copter {
       dimensions.DRONE_SIZE * this.scale,
       dimensions.DRONE_SIZE * this.scale
     );
+
+    this.drawRotors(ctx);
 
     if (this.explosionFrame > 0) {
       ctx.drawImage(

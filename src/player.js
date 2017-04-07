@@ -1,5 +1,6 @@
 import events from './events';
 import Copter from './copter';
+import { targetLocation } from './tiles';
 
 class Player extends Copter {
   constructor() {
@@ -12,10 +13,11 @@ class Player extends Copter {
 
     this.hits = 0;
     this.hasPackage = true;
+    this.isDroppingPackage = false;
   }
 
   _handleKeyDown(e) {
-    if (!this.isActive) { return; }
+    if (!this.isActive || this.isDroppingPackage) { return; }
 
     if      (e.key == 'a') { this.moveLeft();  }
     else if (e.key == 'd') { this.moveRight(); }
@@ -25,13 +27,19 @@ class Player extends Copter {
     else if (e.key == 'ArrowLeft') { this.leftDown = true; }
     else if (e.key == 'ArrowRight') { this.rightDown = true; }
 
-    else if (e.code == 'Space') {
-      this.shoot();
+    else if (e.code == 'Space') { this.shoot(); }
+
+    else if (e.key == 'Enter') {
+      if (this.isInDropzone()) {
+        this.dropPackage();
+      } else {
+        console.log('Not in package drop zone')
+      }
     }
   }
 
   _handleKeyUp(e) {
-    if (!this.isActive) { return; }
+    if (!this.isActive || this.isDroppingPackage) { return; }
 
     if      (e.key == 'a' || e.key == 'd') { this.stopHorizontalMovement(); }
     else if (e.key == 'w' || e.key == 's') { this.stopVerticalMovement(); }
@@ -43,6 +51,32 @@ class Player extends Copter {
   _bind() {
     events.keyDown.add(this._handleKeyDown);
     events.keyUp.add(this._handleKeyUp);
+  }
+
+  _update() {
+    if (this.isDroppingPackage) {
+      this.packageHeight += .1;
+
+      if (this.packageHeight >= 30) {
+        console.log('package delivered');
+        this.hasPackage = false;
+        this.isDroppingPackage = false;
+        this.packageHeight = 0;
+      }
+    }
+  }
+
+  isInDropzone() {
+    const dx = targetLocation.x - this.position[0];
+    const dy = targetLocation.y - this.position[1];
+
+    return Math.sqrt( dx * dx + dy * dy ) < 100;
+  }
+
+  dropPackage() {
+    this.isDroppingPackage = true;
+    this.rotation = 0;
+    this.velocityX = this.velocityY = this.acceleratorX = this.acceleratorY = 0;
   }
 }
 
