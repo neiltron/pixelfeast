@@ -1,6 +1,6 @@
 export const VIEWPORT_WIDTH = 1024;
 export const VIEWPORT_HEIGHT = 1024;
-export const TILE_SIZE = 64;
+export const TILE_SIZE = 128;
 export const DRONE_SIZE = 128;
 export const GRID_WIDTH = 128;
 export const GRID_HEIGHT = 128;

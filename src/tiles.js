@@ -5,12 +5,18 @@ import Camera from './camera';
 
 const TILES = {
   GRASS: 0,
-  ROAD: 1,
+  ROAD_H: 1,
+  ROAD_V: 2,
+  ROAD_INTERSECTION: 3,
+  RESERVED: 4,
 };
 
 const IMAGES = [
   'grass',
-  'road',
+  'road1',
+  'road2',
+  'road3',
+  'grass',
 ];
 
 const DIRECTIONS = {
@@ -20,95 +26,91 @@ const DIRECTIONS = {
   WEST: [-1, 0],
 };
 
-let tiles;
+let tiles, tileObjects = [];
 
-function buildRoadVertical(startingColumn) {
-  const {NORTH, EAST, SOUTH, WEST} = DIRECTIONS;
-
-  let x = startingColumn;
-  let y = dimensions.GRID_HEIGHT - 1;
-  let direction = NORTH;
-  let possibleDirections;
-  let steps = 0;
-  let minSteps = 1;
-
-  while (y >= 0) {
-    tiles[y * dimensions.GRID_WIDTH + x] = TILES.ROAD;
-    if (steps > minSteps) {
-      steps = 0;
-      minSteps = rand(3, 5);
-      if (direction === NORTH) {
-        possibleDirections = [NORTH, EAST, WEST];
-      } else if (direction === SOUTH) {
-        possibleDirections = [EAST, WEST];
-      } else if (direction === EAST) {
-        possibleDirections = [NORTH, EAST];
-      } else if (direction === WEST) { possibleDirections = [NORTH, WEST]; }
-
-      direction = possibleDirections[rand(0, possibleDirections.length)];
+const generateRoads = () => {
+  for (let x = 0; x < dimensions.GRID_WIDTH; x += 1) {
+    if (Math.random() < 0.75) {
+      continue;
+    }
+    for (let y = 0; y < dimensions.GRID_HEIGHT; y += 1) {
+      let index = y * dimensions.GRID_WIDTH + x;
+      tiles[index] = tiles[index] === TILES.GRASS ? TILES.ROAD_V : TILES.ROAD_INTERSECTION;
     }
 
-    steps += 1;
-
-    x = Math.max(0, Math.min(dimensions.GRID_WIDTH - 1, x + direction[0]));
-    y = Math.min(dimensions.GRID_WIDTH - 1, y + direction[1]);
+    x += 4;
   }
-}
 
-function buildRoadHorizontal(startingRow) {
-  const {NORTH, EAST, SOUTH, WEST} = DIRECTIONS;
+  for (let y = 0; y < dimensions.GRID_HEIGHT; y += 1) {
+    if (Math.random() < 0.75) {
+      continue;
+    }
 
-  let x = dimensions.GRID_WIDTH - 1;
-  let y = startingRow;
-  let direction = WEST;
-  let possibleDirections;
-  let steps = 0;
-  let minSteps = 1;
+    for (let x = 0; x < dimensions.GRID_WIDTH; x += 1) {
+      let index = y * dimensions.GRID_WIDTH + x;
+      tiles[index] = tiles[index] === TILES.GRASS ? TILES.ROAD_H : TILES.ROAD_INTERSECTION;
+    }
 
-  while (x >= 0) {
-    tiles[y * dimensions.GRID_WIDTH + x] = TILES.ROAD;
-    if (steps > minSteps) {
-      steps = 0;
-      minSteps = rand(3, 5);
-      if (direction === WEST) {
-        possibleDirections = [WEST, NORTH, SOUTH];
-      } else if (direction === EAST) {
-        possibleDirections = [NORTH, SOUTH];
-      } else if (direction === NORTH) {
-        possibleDirections = [WEST, NORTH];
-      } else if (direction === SOUTH) {
-        possibleDirections = [WEST, SOUTH];
+    y += 2;
+  }
+};
+
+const generateHouses = () => {
+  var count, index, x, y, rowHasHouse = false;
+  for (y = 1; y < dimensions.GRID_HEIGHT; y += 1) {
+    count = 0;
+    rowHasHouse = false;
+    for (x = 0; x < dimensions.GRID_WIDTH; x += 1) {
+      index = y * dimensions.GRID_WIDTH + x;
+      if (tiles[index] === TILES.GRASS) {
+        count += 1;
+      } else {
+        count = 0;
       }
 
-      direction = possibleDirections[rand(0, possibleDirections.length)];
+      if (count < 2) {
+        continue;
+      }
+
+      count = 0;
+
+      if (tiles[(y - 1) * dimensions.GRID_WIDTH + x] !== TILES.GRASS) {
+        continue;
+      }
+
+      if (Math.random() < 0.1) {
+        continue;
+      }
+
+      rowHasHouse = true;
+
+      tiles[index] = TILES.RESERVED;
+      tiles[index - 1] = TILES.RESERVED;
+      tileObjects.push({
+        image: 'house' + rand(1, 10),
+        x: (x - 1) * dimensions.TILE_SIZE,
+        y: (y - 1) * dimensions.TILE_SIZE,
+        width: dimensions.TILE_SIZE * 2,
+        height: dimensions.TILE_SIZE * 2,
+        filter: `hue-rotate(${rand(0, 360)}deg)`,
+      });
+      x += 1;
     }
 
-    steps += 1;
-
-    x = Math.min(dimensions.GRID_WIDTH - 1, x + direction[0]);
-    y = Math.max(0, Math.min(dimensions.GRID_WIDTH - 1, y + direction[1]));
+    if (rowHasHouse) {
+      y += 1;
+    }
   }
-}
+};
 
 export default {
   generate() {
     tiles = Array.from(Array(dimensions.GRID_WIDTH * dimensions.GRID_HEIGHT)).map(x => TILES.GRASS);
-
-    for (let x = 0; x < dimensions.GRID_WIDTH; x += 1) {
-      if (Math.random() < 0.1) {
-        buildRoadHorizontal(x);
-      }
-    }
-
-    for (let y = 0; y < dimensions.GRID_HEIGHT; y += 1) {
-      if (Math.random() < 0.1) {
-        buildRoadVertical(y);
-      }
-    }
+    generateRoads();
+    generateHouses();
   },
 
   draw(ctx) {
-    const tileSize = Math.floor(dimensions.TILE_SIZE);
     const bounds = Camera.getBounds();
 
     let tile, y, x;
@@ -123,8 +125,23 @@ export default {
         }
 
         tile = tiles[y * dimensions.GRID_WIDTH + x];
-        ctx.drawImage(images[IMAGES[tile]], Math.floor(x * dimensions.TILE_SIZE), Math.floor(y * dimensions.TILE_SIZE), tileSize + 1, tileSize + 1);
+        ctx.drawImage(images[IMAGES[tile]], Math.floor(x * dimensions.TILE_SIZE), Math.floor(y * dimensions.TILE_SIZE), dimensions.TILE_SIZE, dimensions.TILE_SIZE);
       }
     }
+
+    ctx.save();
+    tileObjects.forEach(obj => {
+      if (obj.y + obj.height < bounds.y || obj.y > bounds.y + bounds.h) {
+        return;
+      }
+
+      if (obj.x + obj.width < bounds.x || obj.x > bounds.x + bounds.w) {
+        return;
+      }
+
+      ctx.filter = obj.filter;
+      ctx.drawImage(images[obj.image], obj.x, obj.y, obj.width, obj.height);
+    });
+    ctx.restore();
   }
 };
