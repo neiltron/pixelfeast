@@ -51,9 +51,13 @@ function draw() {
     })
   }
 
-  Projectiles.forEach(projectile => {
-    projectile.update();
-    projectile.draw(ctx);
+  Projectiles.forEach((projectile, index) => {
+    if (Date.now() - projectile.created > 4000) {
+      Projectiles.splice(index, 1);
+    } else {
+      projectile.update();
+      projectile.draw(ctx);
+    }
   });
 
   enemies.forEach((enemy, index) => {
