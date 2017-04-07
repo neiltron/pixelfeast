@@ -19,7 +19,7 @@ let ctx = canvas.getContext('2d');
 
 let lastUpdate = Date.now();
 
-const enemies = [];
+let enemies = [];
 
 function draw() {
   requestAnimationFrame(draw);
@@ -117,6 +117,13 @@ function createEnemies() {
   }
 }
 
+function resetGame() {
+  enemies = [];
+
+  Player.reset();
+  createEnemies();
+}
+
 Tiles.generate();
 
 const resize = () => {
@@ -131,5 +138,9 @@ window.addEventListener('resize', resize);
 window.addEventListener('keydown', e => { events.keyDown.dispatch(e); });
 window.addEventListener('keyup', e => { events.keyUp.dispatch(e); });
 
+events.reset.add(() => {
+  resetGame();
+})
 
-loadImages().then(draw).then(createEnemies);
+
+loadImages().then(draw).then(resetGame);

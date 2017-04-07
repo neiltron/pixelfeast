@@ -135,6 +135,12 @@ export default {
     }
   },
 
+  setTarget() {
+    let house = tileObjects[rand(0, tileObjects.length)];
+    targetLocation.x = house.x + Math.floor(house.width / 2);
+    targetLocation.y = house.y + Math.floor(house.height / 2);
+  },
+
   draw(ctx) {
     const bounds = Camera.getBounds();
 

@@ -1,6 +1,6 @@
 import events from './events';
 import Copter from './copter';
-import { targetLocation } from './tiles';
+import Tiles, { targetLocation } from './tiles';
 
 class Player extends Copter {
   constructor() {
@@ -14,6 +14,14 @@ class Player extends Copter {
     this.hits = 0;
     this.hasPackage = true;
     this.isDroppingPackage = false;
+  }
+
+  reset() {
+    this.hasPackage = true;
+    this.isDroppingPackage = false;
+    this.position = this.center;
+
+    Tiles.setTarget();
   }
 
   _handleKeyDown(e) {
@@ -62,6 +70,8 @@ class Player extends Copter {
         this.hasPackage = false;
         this.isDroppingPackage = false;
         this.packageHeight = 0;
+
+        events.reset.dispatch();
       }
     }
   }
