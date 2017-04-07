@@ -34,7 +34,7 @@ export default {
     ctx.fillStyle = '#f00';
 
     if (targetInView) {
-      drawSprite(ctx, SPRITES.SOUTH, targetLocation.x, targetLocation.y, 64, 64);
+      drawSprite(ctx, SPRITES.SOUTH, targetLocation.x - 32, targetLocation.y - 32, 64, 64);
     } else {
       let x = targetLocation.x;
       let y = targetLocation.y;

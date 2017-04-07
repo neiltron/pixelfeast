@@ -85,9 +85,10 @@ function draw() {
     }
   });
 
+  Navigation.draw(ctx);
+
   Player.draw(ctx, delta);
 
-  Navigation.draw(ctx);
 
   ctx.restore();
 }
