@@ -40,6 +40,8 @@ class Copter {
     this.velocityX = clamp(this.velocityX, -1, 1);
     this.velocityY = clamp(this.velocityY, -1, 1);
 
+    // check oob after setting velocity/accelerator so we can correct
+    // course if copter is off screen
     this.checkOOB();
 
     this.position[0] += this.velocityX * delta;
@@ -122,7 +124,7 @@ class Copter {
       this.position[0] = 1;
       this.velocityX = .05;
       this.acceleratorX = .000005;
-    } else if (this.position[0] > dimensions.GRID_WIDTH * dimensions.TILE_SIZE + 1) {
+    } else if (this.position[0] > dimensions.MAP_PIXEL_WIDTH) {
       this.position[0] = dimensions.GRID_WIDTH * dimensions.TILE_SIZE;
       this.velocityX = -.05;
       this.acceleratorX = -.000005;
@@ -130,7 +132,7 @@ class Copter {
       this.position[1] = 1;
       this.velocityY = .05;
       this.acceleratorY = .000005;
-    } else if (this.position[1] > dimensions.GRID_HEIGHT * dimensions.TILE_SIZE + 1) {
+    } else if (this.position[1] > dimensions.MAP_PIXEL_HEIGHT) {
       this.position[1] = dimensions.GRID_HEIGHT * dimensions.TILE_SIZE;
       this.velocityY = -.05;
       this.acceleratorY = -.000005;
