@@ -14,6 +14,8 @@ class Player extends Copter {
   }
 
   _handleKeyDown(e) {
+    if (!this.isActive) { return; }
+
     if      (e.key == 'a') { this.moveLeft();  }
     else if (e.key == 'd') { this.moveRight(); }
     else if (e.key == 'w') { this.moveUp();    }
@@ -28,6 +30,8 @@ class Player extends Copter {
   }
 
   _handleKeyUp(e) {
+    if (!this.isActive) { return; }
+
     if      (e.key == 'a' || e.key == 'd') { this.stopHorizontalMovement(); }
     else if (e.key == 'w' || e.key == 's') { this.stopVerticalMovement(); }
 

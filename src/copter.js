@@ -61,6 +61,7 @@ class Copter {
         this.isActive = false;
         this.scale = 0;
         this.explosionFrame = -1;
+        this.acceleratorX = this.acceleratorY = this.velocityX = this.velocityY = 0;
       }
     }
   }
