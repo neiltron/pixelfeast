@@ -48,8 +48,15 @@ body {
 
 #intro .instruction {
   position: absolute;
-  bottom: 5vw;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #000;
+}
+
+#intro .instruction img {
   width: 40vw;
+  margin: 1vw 0;
 }
 
 canvas {
