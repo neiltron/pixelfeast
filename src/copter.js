@@ -30,6 +30,8 @@ class Copter {
   }
 
   update(delta) {
+    if (typeof this._update === 'function') { this._update(delta); }
+
     this.velocityX += this.acceleratorX * delta;
     this.velocityY += this.acceleratorY * delta;
 
