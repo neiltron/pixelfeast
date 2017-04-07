@@ -17,14 +17,19 @@ class Player extends Copter {
   }
 
   reset() {
+    console.log('reset')
+    this.isActive = true;
+    this.explosionFrame = -1;
+    this.scale = 1;
     this.hasPackage = true;
     this.isDroppingPackage = false;
     this.position = this.center;
-
-    Tiles.setTarget();
   }
 
   _handleKeyDown(e) {
+    if (e.code == 'Space' && !this.isActive) {
+      events.reset.dispatch();
+    }
     if (!this.isActive || this.isDroppingPackage) { return; }
 
     if      (e.key == 'a') { this.moveLeft();  }
@@ -35,7 +40,9 @@ class Player extends Copter {
     else if (e.key == 'ArrowLeft') { this.leftDown = true; }
     else if (e.key == 'ArrowRight') { this.rightDown = true; }
 
-    else if (e.code == 'Space') { this.shoot(); }
+    else if (e.code == 'Space') {
+      this.shoot();
+    }
 
     else if (e.key == 'Enter') {
       if (this.isInDropzone()) {

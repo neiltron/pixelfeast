@@ -11,6 +11,47 @@ body {
   text-align: center;
 }
 
+#intro {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(0deg, #B2EFFF, #E8EBED);
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.25s ease-out;
+}
+
+#intro.hide {
+  pointer-events: none;
+  transform: translate3d(0, -100vh, 0);
+}
+#intro .cloud1 {
+  position: absolute;
+  bottom: -10vw;
+  left: -10vw;
+  width: 70vw;
+  height: auto;
+}
+#intro .cloud2 {
+  position: absolute;
+  bottom: 0;
+  right: -10vw;
+  width: 70vw;
+  height: auto;
+}
+
+#intro .instruction {
+  position: absolute;
+  bottom: 5vw;
+  width: 40vw;
+}
+
 canvas {
   display: inline-block;
 }

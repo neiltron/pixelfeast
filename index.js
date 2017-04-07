@@ -1,4 +1,4 @@
-import Tiles from './src/tiles';
+import Tiles, { targetLocation } from './src/tiles';
 import Navigation from './src/navigation';
 import * as dimensions from './src/dimensions';
 import Copter from './src/copter';
@@ -115,12 +115,20 @@ function createEnemies() {
       // position: [dimensions.MAP_PIXEL_WIDTH / 2 + (Math.random() * dimensions.VIEWPORT_WIDTH * 2 - dimensions.VIEWPORT_WIDTH), dimensions.MAP_PIXEL_HEIGHT / 2 + (Math.random() * dimensions.VIEWPORT_WIDTH * 2 - dimensions.VIEWPORT_WIDTH)]
     }));
   }
+
+  for (var i = 0; i < 5; i += 1) {
+    enemies.push(new Enemy({
+      position: [targetLocation.x, targetLocation.y]
+      // position: [dimensions.MAP_PIXEL_WIDTH / 2 + (Math.random() * dimensions.VIEWPORT_WIDTH * 2 - dimensions.VIEWPORT_WIDTH), dimensions.MAP_PIXEL_HEIGHT / 2 + (Math.random() * dimensions.VIEWPORT_WIDTH * 2 - dimensions.VIEWPORT_WIDTH)]
+    }));
+  }
 }
 
 function resetGame() {
   enemies = [];
 
   Player.reset();
+  Tiles.setTarget();
   createEnemies();
 }
 
@@ -132,15 +140,26 @@ const resize = () => {
   canvas.height = size;
 };
 
-resize();
+function init() {
+  resize();
 
+  events.reset.add(() => {
+    resetGame();
+  })
+
+  loadImages().then(draw).then(resetGame);
+}
+
+let started = false;
 window.addEventListener('resize', resize);
 window.addEventListener('keydown', e => { events.keyDown.dispatch(e); });
-window.addEventListener('keyup', e => { events.keyUp.dispatch(e); });
+window.addEventListener('keyup', e => {
+  if (!started && e.keyCode === 32) {
+    document.getElementById('intro').classList.add('hide');
+    started = true;
+    init();
+  }
+  events.keyUp.dispatch(e);
+});
 
-events.reset.add(() => {
-  resetGame();
-})
-
-
-loadImages().then(draw).then(resetGame);
+loadImages().then(draw).then(createEnemies);
