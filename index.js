@@ -38,6 +38,8 @@ function draw() {
       for (var i = 0; i < enemies.length; i++) {
         let enemy = enemies[i];
 
+        if (projectile.playerID == enemy.id) { continue; }
+
         if (projectile.detectCollision(enemy)) {
           enemy.explode();
 
@@ -59,6 +61,11 @@ function draw() {
       enemies.splice(index, 1);
     } else {
       enemy.draw(ctx, delta);
+
+      // fire at random
+      if (Math.random() > .98) {
+        enemy.shoot();
+      }
     }
   });
 
