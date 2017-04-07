@@ -19,9 +19,15 @@ let lastUpdate = Date.now();
 const enemies = [];
 
 function draw() {
+  requestAnimationFrame(draw);
   const delta = Date.now() - lastUpdate;
 
   lastUpdate = Date.now();
+
+  if (delta > 1000) {
+    // ignore this is a huge delta, probably tab was unfocused for a while
+    return;
+  }
 
   ctx.save();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -81,8 +87,6 @@ function draw() {
   Player.draw(ctx, delta);
 
   ctx.restore();
-
-  requestAnimationFrame(draw);
 }
 
 function createEnemies() {
