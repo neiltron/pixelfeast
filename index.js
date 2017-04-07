@@ -90,9 +90,10 @@ function draw() {
 }
 
 function createEnemies() {
-  for (var i = 0; i < 10; i += 1) {
+  for (var i = 0; i < 50; i += 1) {
     enemies.push(new Enemy({
       position: [Math.random() * dimensions.MAP_PIXEL_WIDTH, Math.random() * dimensions.MAP_PIXEL_HEIGHT]
+      // position: [dimensions.MAP_PIXEL_WIDTH / 2 + (Math.random() * dimensions.VIEWPORT_WIDTH * 2 - dimensions.VIEWPORT_WIDTH), dimensions.MAP_PIXEL_HEIGHT / 2 + (Math.random() * dimensions.VIEWPORT_WIDTH * 2 - dimensions.VIEWPORT_WIDTH)]
     }));
   }
 }
