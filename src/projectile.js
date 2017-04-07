@@ -27,4 +27,16 @@ export default class Projectile {
 
     ctx.restore();
   }
+
+  detectCollision(obj) {
+    // bounding box for the people
+    if (
+      (this.position[0] > obj.position[0] - obj.width / 2 && this.position[0] < obj.position[0] + obj.width / 2) &&
+      (this.position[1] > obj.position[1] - obj.height / 2 && this.position[1] < obj.position[1] + obj.height / 2)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
 }

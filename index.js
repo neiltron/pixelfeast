@@ -32,13 +32,34 @@ function draw() {
 
   Tiles.draw(ctx);
 
+  if (Projectiles.length > 0 && enemies.length > 0) {
+
+    Projectiles.forEach((projectile, index) => {
+      for (var i = 0; i < enemies.length; i++) {
+        let enemy = enemies[i];
+
+        if (projectile.detectCollision(enemy)) {
+          enemy.explode();
+
+          Projectiles.splice(index, 1);
+
+          break;
+        }
+      }
+    })
+  }
+
   Projectiles.forEach(projectile => {
     projectile.update();
     projectile.draw(ctx);
   });
 
-  enemies.forEach(enemy => {
-    enemy.draw(ctx, delta);
+  enemies.forEach((enemy, index) => {
+    if (enemy.scale < .4) {
+      enemies.splice(index, 1);
+    } else {
+      enemy.draw(ctx, delta);
+    }
   });
 
   Player.draw(ctx, delta);
