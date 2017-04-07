@@ -25,7 +25,7 @@ class Copter {
     this.rightDown = false;
 
     this.center = [dimensions.VIEWPORT_WIDTH / 2 - this.width / 2, dimensions.VIEWPORT_HEIGHT / 2 - this.height / 2];
-    this.position = opts.position || [dimensions.VIEWPORT_WIDTH / 2 - this.width / 2, dimensions.VIEWPORT_HEIGHT / 2 - this.height / 2];
+    this.position = opts.position || [dimensions.MAP_PIXEL_WIDTH / 2 - this.width / 2, dimensions.MAP_PIXEL_HEIGHT / 2 - this.height / 2];
     this.rotation = 0;
 
     this.hasPackage = false;
