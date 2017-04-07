@@ -13,7 +13,7 @@ class Copter {
 
     this.width = dimensions.DRONE_SIZE;
     this.height = dimensions.DRONE_SIZE;
-    this.scale = 1; // temporary "explosion" visual is scaling down to 0
+    this.scale = 1;
 
     this.velocityX = 0;
     this.velocityY = 0;
@@ -29,6 +29,7 @@ class Copter {
     this.rotation = 0;
 
     this.hasPackage = false;
+    this.packageHeight = 0;
     this.explosionFrame = -1;
     this.isActive = true;
   }
@@ -53,7 +54,6 @@ class Copter {
       this.rotation += 0.005 * delta * (this.leftDown ? -1 : 1)
     }
 
-    // temporary "explosion" visual is scaling down to 0
     if (this.explosionFrame > 0) {
       this.scale -= .01;
 
@@ -86,11 +86,20 @@ class Copter {
   }
 
   drawSprite(ctx) {
+    if (this.hasPackage) {
+      ctx.drawImage(
+        images.package,
+        48 * this.scale / -2,
+        6 + this.packageHeight * this.scale,
+        48 * this.scale,
+        48 * this.scale
+      )
+    }
+
     ctx.drawImage(
       images.drone,
       Math.floor(-dimensions.DRONE_SIZE / 2),
       Math.floor(-dimensions.DRONE_SIZE / 2),
-      // temporary "explosion" visual is scaling down to 0
       dimensions.DRONE_SIZE * this.scale,
       dimensions.DRONE_SIZE * this.scale
     );

@@ -11,6 +11,7 @@ class Player extends Copter {
     this._bind();
 
     this.hits = 0;
+    this.hasPackage = true;
   }
 
   _handleKeyDown(e) {

@@ -10,7 +10,7 @@ class Enemy extends Copter {
       images.drone_enemy,
       -dimensions.DRONE_SIZE / 2,
       -dimensions.DRONE_SIZE / 2,
-      dimensions.DRONE_SIZE * this.scale, // temporary "explosion" visual is scaling down to 0
+      dimensions.DRONE_SIZE * this.scale,
       dimensions.DRONE_SIZE * this.scale
     );
 
