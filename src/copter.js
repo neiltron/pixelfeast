@@ -8,8 +8,8 @@ import { clamp } from './utils';
 const rotorPos = [
   [-41, -45],
   [40, -45],
-  [-41, 32],
-  [40, 32],
+  [-41, 28],
+  [40, 28],
 ];
 
 class Copter {

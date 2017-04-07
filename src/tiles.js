@@ -9,6 +9,11 @@ const TILES = {
   ROAD_V: 2,
   ROAD_INTERSECTION: 3,
   RESERVED: 4,
+  GRASS1: 5,
+  GRASS2: 6,
+  GRASS3: 7,
+  GRASS4: 8,
+  GRASS5: 9,
 };
 
 const IMAGES = [
@@ -17,6 +22,11 @@ const IMAGES = [
   'road2',
   'road3',
   'grass',
+  'grass1',
+  'grass2',
+  'grass3',
+  'grass4',
+  'grass5',
 ];
 
 const DIRECTIONS = {
@@ -114,6 +124,18 @@ export default {
     generateRoads();
     generateHouses();
 
+    let house = tileObjects[rand(0, tileObjects.length)];
+    targetLocation.x = house.x + Math.floor(house.width / 2);
+    targetLocation.y = house.y + Math.floor(house.height / 2);
+
+    for (let j = 0; j < tiles.length; j += 1) {
+      if (tiles[j] === TILES.GRASS) {
+        tiles[j] = TILES['GRASS' + rand(1, 6)];
+      }
+    }
+  },
+
+  setTarget() {
     let house = tileObjects[rand(0, tileObjects.length)];
     targetLocation.x = house.x + Math.floor(house.width / 2);
     targetLocation.y = house.y + Math.floor(house.height / 2);
