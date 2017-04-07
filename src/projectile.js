@@ -1,5 +1,7 @@
 export default class Projectile {
   constructor(opts) {
+    this.playerID = opts.playerID;
+
     this.direction = opts.direction;
     this.velocity = 20;
 

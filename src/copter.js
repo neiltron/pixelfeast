@@ -9,6 +9,8 @@ class Copter {
   constructor(opts) {
     opts = opts || {};
 
+    this.id = Math.floor(Math.random() * 10000);
+
     this.width = dimensions.DRONE_SIZE;
     this.height = dimensions.DRONE_SIZE;
     this.scale = 1; // temporary "explosion" visual is scaling down to 0
@@ -105,6 +107,7 @@ class Copter {
     Projectiles.push(new Projectile({
       direction: this.rotation,
       position: this.position.slice(),
+      playerID: this.id
     }));
   }
 
