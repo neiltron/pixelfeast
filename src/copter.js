@@ -30,6 +30,7 @@ class Copter {
 
     this.hasPackage = false;
     this.explosionFrame = -1;
+    this.isActive = true;
   }
 
   update(delta) {
@@ -55,6 +56,12 @@ class Copter {
     // temporary "explosion" visual is scaling down to 0
     if (this.explosionFrame > 0) {
       this.scale -= .01;
+
+      if (this.scale <= 0) {
+        this.isActive = false;
+        this.scale = 0;
+        this.explosionFrame = -1;
+      }
     }
   }
 
@@ -86,6 +93,19 @@ class Copter {
       dimensions.DRONE_SIZE * this.scale,
       dimensions.DRONE_SIZE * this.scale
     );
+
+    if (this.explosionFrame > 0) {
+      ctx.drawImage(
+        images.explosion,
+        Math.floor(Math.floor(this.explosionFrame) / 5) * 64,
+        (Math.floor(this.explosionFrame) % 5) * 64,
+        64, 64,
+        -dimensions.DRONE_SIZE / 2,
+        -dimensions.DRONE_SIZE / 2,
+        dimensions.DRONE_SIZE,
+        dimensions.DRONE_SIZE
+      );
+    }
   }
 
   moveLeft() {

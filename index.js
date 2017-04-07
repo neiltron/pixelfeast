@@ -43,6 +43,18 @@ function draw() {
     const bounds = Camera.getBounds();
 
     Projectiles.forEach((projectile, index) => {
+      if (projectile.detectCollision(Player)) {
+        if (projectile.playerID != Player.id) {
+          Projectiles.splice(index, 1);
+
+          Player.hits++;
+
+          if (Player.hits >= 4) {
+            Player.explode();
+          }
+        }
+      }
+
       // check for enemy collisions
       for (var i = 0; i < enemies.length; i++) {
         let enemy = enemies[i];
