@@ -8,6 +8,8 @@ import Camera from './src/camera';
 import events from './src/events';
 import {loadImages, images} from './src/assets';
 import Projectiles from './src/projectiles';
+import Healthhud from './src/healthhud';
+
 
 let canvas = document.querySelector('canvas');
 canvas.width = 512;
@@ -101,6 +103,7 @@ function draw() {
 
   Player.draw(ctx, delta);
 
+  Healthhud(ctx);
 
   ctx.restore();
 }
