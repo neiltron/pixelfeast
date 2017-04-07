@@ -14,6 +14,8 @@ class Enemy extends Copter {
       dimensions.DRONE_SIZE * this.scale
     );
 
+    this.drawRotors(ctx);
+
     if (this.explosionFrame > 0) {
       ctx.drawImage(
         images.explosion,

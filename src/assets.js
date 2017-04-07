@@ -20,7 +20,8 @@ export const images = {
   explosion: './static/explosion.png',
   navigation: './static/navigation.png',
   healthhud_drone: './static/healthhud_drone.png',
-  package: './static/package.png'
+  package: './static/package.png',
+  rotor: './static/rotor.png',
 };
 
 export function loadImages() {
