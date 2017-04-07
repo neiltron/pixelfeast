@@ -33,10 +33,22 @@ function draw() {
   Tiles.draw(ctx);
 
   if (Projectiles.length > 0 && enemies.length > 0) {
+    const bounds = Camera.getBounds();
 
     Projectiles.forEach((projectile, index) => {
+      // check for enemy collisions
       for (var i = 0; i < enemies.length; i++) {
         let enemy = enemies[i];
+
+        // drones can't kill themselves
+        if (projectile.playerID == enemy.id) { continue; }
+
+        if (
+          (enemy.position[1] + enemy.height < bounds.y || enemy.position[1] > bounds.y + bounds.h)
+          && (enemy.position[0] + enemy.width < bounds.x || enemy.position[0] > bounds.x + bounds.w)
+          ) {
+          continue;
+        }
 
         if (projectile.detectCollision(enemy)) {
           enemy.explode();
@@ -46,14 +58,18 @@ function draw() {
           break;
         }
       }
+
+      // update projectile positions
+      if (Date.now() - projectile.created > 4000) {
+        Projectiles.splice(index, 1);
+      } else {
+        projectile.update();
+        projectile.draw(ctx);
+      }
     })
   }
 
-  Projectiles.forEach(projectile => {
-    projectile.update();
-    projectile.draw(ctx);
-  });
-
+  // update enemy positions
   enemies.forEach((enemy, index) => {
     if (enemy.scale < .4) {
       enemies.splice(index, 1);
@@ -70,9 +86,9 @@ function draw() {
 }
 
 function createEnemies() {
-  for (var i = 0; i < 4; i += 1) {
+  for (var i = 0; i < 10; i += 1) {
     enemies.push(new Enemy({
-      position: [Math.random() * dimensions.VIEWPORT_WIDTH, Math.random() * dimensions.VIEWPORT_HEIGHT]
+      position: [Math.random() * dimensions.MAP_PIXEL_WIDTH, Math.random() * dimensions.MAP_PIXEL_HEIGHT]
     }));
   }
 }

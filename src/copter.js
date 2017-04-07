@@ -9,6 +9,8 @@ class Copter {
   constructor(opts) {
     opts = opts || {};
 
+    this.id = Math.floor(Math.random() * 10000);
+
     this.width = dimensions.DRONE_SIZE;
     this.height = dimensions.DRONE_SIZE;
     this.scale = 1; // temporary "explosion" visual is scaling down to 0
@@ -23,10 +25,11 @@ class Copter {
     this.rightDown = false;
 
     this.center = [dimensions.VIEWPORT_WIDTH / 2 - this.width / 2, dimensions.VIEWPORT_HEIGHT / 2 - this.height / 2];
-    this.position = opts.position || [dimensions.VIEWPORT_WIDTH / 2 - this.width / 2, dimensions.VIEWPORT_HEIGHT / 2 - this.height / 2];
+    this.position = opts.position || [dimensions.MAP_PIXEL_WIDTH / 2 - this.width / 2, dimensions.MAP_PIXEL_HEIGHT / 2 - this.height / 2];
     this.rotation = 0;
 
     this.hasPackage = false;
+    this.explosionFrame = -1;
   }
 
   update(delta) {
@@ -38,6 +41,10 @@ class Copter {
     this.velocityX = clamp(this.velocityX, -1, 1);
     this.velocityY = clamp(this.velocityY, -1, 1);
 
+    // check oob after setting velocity/accelerator so we can correct
+    // course if copter is off screen
+    this.checkOOB();
+
     this.position[0] += this.velocityX * delta;
     this.position[1] += this.velocityY * delta;
 
@@ -46,13 +53,17 @@ class Copter {
     }
 
     // temporary "explosion" visual is scaling down to 0
-    if (this.isExploding) {
+    if (this.explosionFrame > 0) {
       this.scale -= .05;
     }
   }
 
   draw(ctx, delta) {
     this.update(delta);
+
+    if (this.explosionFrame >= 0) {
+      this.explosionFrame += .25;
+    }
 
     ctx.save();
     ctx.translate(
@@ -105,11 +116,41 @@ class Copter {
     Projectiles.push(new Projectile({
       direction: this.rotation,
       position: this.position.slice(),
+      playerID: this.id
     }));
   }
 
   explode() {
-    this.isExploding = true;
+    this.explosionFrame = 0;
+
+    events.explode.dispatch();
+  }
+
+  checkOOB() {
+    if (this.position[0] < 0) {
+      this.position[0] = 1;
+      this.velocityX = .05;
+      this.acceleratorX = .000005;
+    } else if (this.position[0] > dimensions.MAP_PIXEL_WIDTH) {
+      this.position[0] = dimensions.GRID_WIDTH * dimensions.TILE_SIZE;
+      this.velocityX = -.05;
+      this.acceleratorX = -.000005;
+    } else if (this.position[1] < 0) {
+      this.position[1] = 1;
+      this.velocityY = .05;
+      this.acceleratorY = .000005;
+    } else if (this.position[1] > dimensions.MAP_PIXEL_HEIGHT) {
+      this.position[1] = dimensions.GRID_HEIGHT * dimensions.TILE_SIZE;
+      this.velocityY = -.05;
+      this.acceleratorY = -.000005;
+    }
+  }
+
+  distanceFrom(obj) {
+    const dx = obj.position[0] - this.position[0];
+    const dy = obj.position[1] - this.position[1];
+
+    return Math.sqrt( dx * dx + dy * dy );
   }
 }
 
