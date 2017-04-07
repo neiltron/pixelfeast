@@ -15,10 +15,15 @@ class Enemy extends Copter {
   }
 
   _update(delta) {
-      this.acceleratorX = (Math.random() - Math.random()) / 5000;
-      this.acceleratorY = (Math.random() - Math.random()) / 5000;
+    // fire at random
+    if (this.distanceFrom(Player) < dimensions.VIEWPORT_WIDTH / 1.1 && Math.random() > .98) {
+      this.shoot();
+    }
 
-      this.rotation = Math.atan2(Player.position[1] - this.position[1], Player.position[0] - this.position[0]) + Math.PI / 2;
+    this.acceleratorX = (Math.random() - Math.random()) / 5000;
+    this.acceleratorY = (Math.random() - Math.random()) / 5000;
+
+    this.rotation = Math.atan2(Player.position[1] - this.position[1], Player.position[0] - this.position[0]) + Math.PI / 2;
   }
 }
 

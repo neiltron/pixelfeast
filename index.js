@@ -34,7 +34,9 @@ function draw() {
 
   if (Projectiles.length > 0 && enemies.length > 0) {
     const bounds = Camera.getBounds();
+
     Projectiles.forEach((projectile, index) => {
+      // check for enemy collisions
       for (var i = 0; i < enemies.length; i++) {
         let enemy = enemies[i];
 
@@ -56,28 +58,23 @@ function draw() {
           break;
         }
       }
+
+      // update projectile positions
+      if (Date.now() - projectile.created > 4000) {
+        Projectiles.splice(index, 1);
+      } else {
+        projectile.update();
+        projectile.draw(ctx);
+      }
     })
   }
 
-  Projectiles.forEach((projectile, index) => {
-    if (Date.now() - projectile.created > 4000) {
-      Projectiles.splice(index, 1);
-    } else {
-      projectile.update();
-      projectile.draw(ctx);
-    }
-  });
-
+  // update enemy positions
   enemies.forEach((enemy, index) => {
     if (enemy.scale < .4) {
       enemies.splice(index, 1);
     } else {
       enemy.draw(ctx, delta);
-
-      // fire at random
-      if (Math.random() > .98) {
-        enemy.shoot();
-      }
     }
   });
 

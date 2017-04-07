@@ -140,6 +140,13 @@ class Copter {
       this.acceleratorY = -.000005;
     }
   }
+
+  distanceFrom(obj) {
+    const dx = obj.position[0] - this.position[0];
+    const dy = obj.position[1] - this.position[1];
+
+    return Math.sqrt( dx * dx + dy * dy );
+  }
 }
 
 export default Copter;
