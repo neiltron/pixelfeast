@@ -9,13 +9,20 @@ import events from './src/events';
 import {loadImages, images} from './src/assets';
 import Projectiles from './src/projectiles';
 import Healthhud from './src/healthhud';
+import {clamp} from './src/utils';
 
+let wrap = document.querySelector('#wrap');
+let canvas = document.querySelector('#canvas');
+let mcanvas = document.querySelector('#mcanvas');
 
-let canvas = document.querySelector('canvas');
 canvas.width = 512;
 canvas.height = 512;
 
+mcanvas.width = 512;
+mcanvas.height = 512;
+
 let ctx = canvas.getContext('2d');
+let mctx = mcanvas.getContext('2d');
 
 let lastUpdate = Date.now();
 
@@ -33,14 +40,23 @@ function draw() {
   }
 
   ctx.save();
+  mctx.save();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const scale = dimensions.getScale(ctx);
+  const mscale = dimensions.getScale(mctx);
+  
   ctx.scale(scale, scale);
+  mctx.scale(mscale, mscale);
+  
+  Camera.translate(ctx);
+  Camera.translate(mctx);
 
-  Camera.translate(ctx)
-
-  Tiles.draw(ctx);
-
+  let velocity = Math.sqrt(Player.velocityX * Player.velocityX + Player.velocityY * Player.velocityY);
+  
+  // Adaptive motion blur
+  mctx.globalAlpha = clamp(1 - Math.pow(Math.min(1, velocity), 2), 0.2, 1);
+  Tiles.draw(mctx);
+  
   if (Projectiles.length > 0 && enemies.length > 0) {
     const bounds = Camera.getBounds();
 
@@ -106,6 +122,7 @@ function draw() {
   Healthhud(ctx);
 
   ctx.restore();
+  mctx.restore();
 }
 
 function createEnemies() {
@@ -138,6 +155,10 @@ const resize = () => {
   const size = Math.min(window.innerWidth, window.innerHeight);
   canvas.width = size;
   canvas.height = size;
+  mcanvas.width = size;
+  mcanvas.height = size;
+  wrap.style.width = size+"px";
+  wrap.style.height = size+"px";
 };
 
 function init() {
